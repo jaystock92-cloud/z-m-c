@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>US Market Daily Bias</title>
+  <meta charset="utf-8">
+  <style>
+    body{background:#f0f0f0;color:#000;font-family:"Times New Roman",serif;font-size:16px;margin:20px;line-height:1.5}
+    .container{max-width:760px;margin:0 auto;background:#fff;border:2px solid #000080;padding:20px}
+    .header-bar{background:#000080;color:white;padding:8px;text-align:center;font-weight:bold;letter-spacing:2px}
+    h1{font-size:28px;color:#000080;text-align:center;margin:0 0 20px;font-weight:bold}
+    pre{background:#f5f5f5;border:1px solid #999;padding:15px;font-family:"Courier New",monospace;font-size:16px;margin:20px 0;white-space:pre-wrap}
+    .bias{font-size:26px;font-weight:bold;text-align:center;margin:15px 0}
+    .bull{color:#006400}.bear{color:#8B0000}.neutral{color:#8B6508}
+    hr{border:1px solid #999;margin:30px 0}
+    .footer{text-align:center;font-size:13px;color:#555;margin-top:30px}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header-bar">US MARKET DAILY BIAS</div>
+  <h1>U.S. Stock Market Directional Outlook</h1>
+  <div id="content"><pre>Loading market analysis... Please wait</pre></div>
+  <hr>
+  <div class="footer">
+    Updated automatically every trading day at 4:00 AM ET<br>
+    Market data delayed • Terms and conditions apply
+  </div>
+</div>
+
+<script>
+  fetch('latest_bias.txt?' + Date.now())
+    .then(r => r.text())
+    .then(t => {
+      document.getElementById('content').innerHTML = '<pre>' + t.replace(/\n/g,'<br>') + '</pre>';
+      const pre = document.querySelector('pre');
+      if (t.includes('STRONG BULLISH') || t.includes('BULLISH'))
+        pre.innerHTML = pre.innerHTML.replace(/(STRONG )?BULLISH/g, '<span class="bias bull">$&</span>');
+      else if (t.includes('STRONG BEARISH') || t.includes('BEARISH'))
+        pre.innerHTML = pre.innerHTML.replace(/(STRONG )?BEARISH/g, '<span class="bias bear">$&</span>');
+      else if (t.includes('NEUTRAL'))
+        pre.innerHTML = pre.innerHTML.replace('NEUTRAL', '<span class="bias neutral">NEUTRAL</span>');
+    });
+</script>
+</body>
+</html>
